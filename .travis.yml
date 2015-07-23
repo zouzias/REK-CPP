@@ -7,5 +7,10 @@ before_install:
   - sudo pip install cpp-coveralls pyyaml
   - sudo apt-get install valgrind
 
-script: ./runTest.sh
-
+script:
+- echo "Running unit tests"
+- ./runTest.sh
+- echo "Running valgrind tests on dense matrices..."
+- valgrind --leak-check=full --error-exitcode=1 ./testDense
+- echo "Running valgrind tests on sparse matrices..."
+- valgrind --leak-check=full --error-exitcode=1 ./testSparse
