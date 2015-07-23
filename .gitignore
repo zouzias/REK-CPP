@@ -1,3 +1,9 @@
+main
+testSparse
+testDense
+testVector
+testSampler
+
 # Compiled Object files
 *.slo
 *.lo
