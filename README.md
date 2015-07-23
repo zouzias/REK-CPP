@@ -23,7 +23,7 @@ The above code runs a simple instance of least-squares for a gaussian random mat
 <h4>
 Bugs
 </h4>
-Please report bugs by opening a new [issue](https://github.com/zouzias/REK/issues/new).
+Please report bugs by opening a new [issue](https://github.com/zouzias/REK-CPP/issues/new).
 
 <h4>
 Implementation Details
