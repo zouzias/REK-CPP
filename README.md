@@ -12,9 +12,6 @@ Authors: [Anastasios Zouzias](https://github.com/zouzias) and Nikolaos Freris
 <h3>
 Installation
 </h3>
-<h4>
-CPP
-</h4>
 
 Clone the project. Type type
 
