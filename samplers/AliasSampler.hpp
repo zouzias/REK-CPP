@@ -48,15 +48,12 @@ public:
 
   };
 
-  AliasSampler(const DoubleVector& probs){
+  AliasSampler(const DoubleVector& probs): : A(probs.size() + 2), B(probs.size() + 2), Y(probs.size() + 2){
 
     uint j;
     double sum = 0;
 
     this->N = (unsigned int)probs.size();
-    this->A = *new std::vector<uint>(N + 2);
-    this->B = *new std::vector<uint>(N + 2);
-    this->Y = *new std::vector<double>(N + 2);
 
     for (j = 0; j < N; j++)
         sum += probs.get(j);
