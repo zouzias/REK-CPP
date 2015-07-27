@@ -39,5 +39,10 @@ int main(void) {
 	x.minus(xopt);
 	cout<< "LS error: " << x.DNRM2() << endl;
 
+  delete &A;
+  delete &xopt;
+  delete &b;
+  delete &x;
+
 	return 0;
 }
