@@ -48,7 +48,7 @@ public:
 
   };
 
-  AliasSampler(const DoubleVector& probs): : A(probs.size() + 2), B(probs.size() + 2), Y(probs.size() + 2){
+  AliasSampler(const DoubleVector& probs): A(probs.size() + 2), B(probs.size() + 2), Y(probs.size() + 2){
 
     uint j;
     double sum = 0;
