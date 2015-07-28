@@ -1,6 +1,6 @@
 <h2> Randomized Extended Kaczmarz (C++) <img src="https://travis-ci.org/zouzias/REK-CPP.svg?branch=master"/></h2>
 <h3> Overview </h3>
-The current project contains a CPP implementation of the algorithm described in the research paper [1]. The Randomized Extended Kaczmarz algorithm is a randomized algorithm for solving least-squares/linear regression problems.
+The Randomized Extended Kaczmarz algorithm is a randomized algorithm for solving least-squares/linear regression problems.
 
 <br>
 [<b>Randomized Extended Kaczmarz for Solving Least-Squares.</b>](http://dx.doi.org/10.1137/120889897)
