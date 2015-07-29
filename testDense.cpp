@@ -41,6 +41,8 @@ int main(void) {
 
 	delete &A;
 	delete &xopt;
+	delete &b;
+	delete &x;
 
 	return 0;
 }

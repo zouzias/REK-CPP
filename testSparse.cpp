@@ -35,5 +35,10 @@ int main(void) {
 	assert( x.DNRM2() <= 0.5);
 	cout<< "Success..." << endl;
 
+	delete &A;
+	delete &xopt;
+	delete &b;
+	delete &x;
+
 	return 0;
 }
