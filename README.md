@@ -20,6 +20,34 @@ Clone the project. Type type
 <code>./main</code>
 
 The above code runs a simple instance of least-squares for a gaussian random matrix A and gaussian vector b. See 'main.c' for more details.
+
+<h3>
+Usage
+</h3>
+
+```
+// Initialize random m x n matrix A and xopt vector
+unsigned int m= 100, n = 10;
+DoubleMatrix& A = *new SparseMatrix(m,n);
+DoubleVector& xopt = *new DenseVector(n);
+xopt.random();
+A.random();
+
+// Compute b=Ax
+DoubleVector& b = A.times(xopt);
+
+// Iterate for 1000000 iterations
+long ITERS = 1000000;
+REKSolver solver = REKSolver();
+DoubleVector& x = solver.solve(A, b, ITERS);
+
+// Error must be smaller than 0.5
+x.minus(xopt);
+cout<< "Error is " << x.DNRM2() << endl;
+assert( x.DNRM2() <= 0.5);
+cout<< "Success..." << endl;
+```
+
 <h4>
 Bugs
 </h4>
