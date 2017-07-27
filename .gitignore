@@ -1,3 +1,7 @@
+cmake-build-debug/
+.idea/
+
+
 main
 testSparse
 testDense
