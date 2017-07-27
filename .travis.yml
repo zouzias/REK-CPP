@@ -9,9 +9,9 @@ before_install:
   - sudo apt-get install valgrind
 
 script:
-- echo "Running unit tests"
-- ./runTest.sh
+- echo "building"
+- ./build.sh
 - echo "Running valgrind tests on dense matrices..."
-- valgrind --leak-check=full --error-exitcode=1 ./testDense
+- valgrind --leak-check=full --error-exitcode=1 build/bin/testDense
 - echo "Running valgrind tests on sparse matrices..."
-- valgrind --leak-check=full --error-exitcode=1 ./testSparse
+- valgrind --leak-check=full --error-exitcode=1 build/bin/testSparse
