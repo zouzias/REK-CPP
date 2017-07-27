@@ -1,11 +1,3 @@
-//============================================================================
-// Name        : REK-CPP.cpp
-// Author      : Anastasios Zouzias
-// Version     :
-// Copyright   : Apache 2.0 License
-// Description : Hello World in C, Ansi-style
-//============================================================================
-
 #include <iostream>
 #include<vector>
 #include<stdlib.h>

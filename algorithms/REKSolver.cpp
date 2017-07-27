@@ -1,14 +1,6 @@
-/*
- * REKSolver.cpp
- *
- *  Created on: May 4, 2015
- *      Author: zouzias
- */
-
 #include "REKSolver.hpp"
 #include "../vector/impl/DenseVector.hpp"
 #include "../samplers/AliasSampler.hpp"
-#include <stdlib.h>
 
 DoubleVector&	 REKSolver::solve(const DoubleMatrix& A, const DoubleVector& b, double MaxSeconds){
 	DoubleVector& vector = *new DenseVector();

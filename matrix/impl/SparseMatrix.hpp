@@ -1,10 +1,3 @@
-/*
- * SparseMatrix.hpp
- *
- *  Created on: May 4, 2015
- *      Author: zouzias
- */
-
 #ifndef SPARSEMATRIX_HPP_
 #define SPARSEMATRIX_HPP_
 

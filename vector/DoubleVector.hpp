@@ -1,5 +1,3 @@
-
-
 #ifndef DOUBLEVECTOR_HPP_
 #define DOUBLEVECTOR_HPP_
 

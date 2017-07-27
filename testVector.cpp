@@ -2,7 +2,6 @@
 
 #include "vector/impl/DenseVector.hpp"
 #include "vector/impl/SparseVector.hpp"
-#include "vector/DoubleVector.hpp"
 
 using namespace std;
 

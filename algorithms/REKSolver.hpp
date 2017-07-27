@@ -1,10 +1,3 @@
-/*
- * REKSolver.hpp
- *
- *  Created on: May 4, 2015
- *      Author: zouzias
- */
-
 #ifndef REKSOLVER_HPP_
 #define REKSOLVER_HPP_
 

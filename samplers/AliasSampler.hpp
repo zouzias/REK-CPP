@@ -1,16 +1,9 @@
-/*
- * AliasMethod.hpp
- *
- *  Created on: May 4, 2015
- *      Author: zouzias
- */
-
 #ifndef ALIASSAMPLER_HPP_
 #define ALIASSAMPLER_HPP_
 
 #include<vector>
-#include<assert.h>
-#include<stdlib.h>
+#include <cassert>
+#include <cstdlib>
 #include "../vector/DoubleVector.hpp"
 
 // Needed for Walker sampling
