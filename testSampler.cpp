@@ -1,11 +1,11 @@
 #include <iostream>
 #include<vector>
-#include<stdlib.h>
 
 #include "samplers/AliasSampler.hpp"
+
 using namespace std;
 
-int main(void) {
+int main() {
 
 	unsigned int n = 100, numSamples = 500;
 	double std = 10.0;

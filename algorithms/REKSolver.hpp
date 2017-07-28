@@ -1,16 +1,26 @@
 #ifndef REKSOLVER_HPP_
 #define REKSOLVER_HPP_
 
+
 #include<iostream>
-#include "../matrix/DoubleMatrix.hpp"
+#include <eigen3/Eigen/Dense>
+
+
+using namespace Eigen;
+
+
+typedef Matrix<double, Dynamic, Dynamic> MatrixXd;
+
+typedef Matrix<double, Dynamic, 1> RowVector;
+
 
 class REKSolver{
 
 public:
 	REKSolver(){}
 
-	DoubleVector& solve(const DoubleMatrix& A, const DoubleVector& b, double MaxSeconds);
-	DoubleVector& solve(const DoubleMatrix& A, const DoubleVector& b, long MaxIterations);
+    RowVector solve(MatrixXd& A, const RowVector& b, double MaxSeconds) const;
+    RowVector solve(MatrixXd& A, const RowVector& b, long MaxIterations) const;
 };
 
 #endif /* REKSOLVER_HPP_ */

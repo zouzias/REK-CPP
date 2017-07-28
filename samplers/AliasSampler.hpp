@@ -4,13 +4,18 @@
 #include<vector>
 #include <cassert>
 #include <cstdlib>
-#include "../vector/DoubleVector.hpp"
+#include <eigen3/Eigen/Dense>
 
 // Needed for Walker sampling
 #define real double
 #ifndef uint
 #define uint unsigned int
 #endif
+
+using namespace Eigen;
+
+typedef Matrix<double, Dynamic, 1> RowVector;
+
 
 class AliasSampler{
 
@@ -41,7 +46,7 @@ public:
 
   };
 
-  AliasSampler(const DoubleVector& probs): A(probs.size() + 2), B(probs.size() + 2), Y(probs.size() + 2){
+  AliasSampler(const RowVector& probs): A(probs.size() + 2), B(probs.size() + 2), Y(probs.size() + 2){
 
     uint j;
     double sum = 0;
@@ -49,13 +54,13 @@ public:
     this->N = (unsigned int)probs.size();
 
     for (j = 0; j < N; j++)
-        sum += probs.get(j);
+        sum += probs(j, 1);
 
     sum = 1 / sum;
 
     // Normalize it now
     for (j = 0; j < N; j++)
-        Y[j + 1] = probs.get(j) * sum;
+        Y[j + 1] = probs(j, 1) * sum;
 
   };
 
