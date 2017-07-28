@@ -1,40 +1,32 @@
 #include <iostream>
 
-#include "samplers/AliasSampler.hpp"
 #include "algorithms/REKSolver.hpp"
-#include "matrix/impl/DenseMatrix.hpp"
-#include "vector/impl/DenseVector.hpp"
 
-using namespace std;
+using namespace Eigen;
 
-int main(void) {
+int main() {
 	// A is an (m, n ) random matrix
 	unsigned int m= 100, n = 10;
-	DoubleMatrix& A = *new DenseMatrix(m,n);
-	A.random();
+	MatrixXd A(m,n);
+	A.setRandom();
 
 	// xopt is a random n-vector
-	DoubleVector& xopt = *new DenseVector(n);
-	xopt.random();
+	RowVector xopt(n);
+	xopt.setRandom();
 
 	// b = A * x
-	DoubleVector& b = A.times(xopt);
+	RowVector b = A * xopt;
 
 	REKSolver solver = REKSolver();
 
 	long ITERS = 1000000;
-	DoubleVector& x = solver.solve(A, b, ITERS);
+	RowVector x = solver.solve(A, b, ITERS);
 
 	// Error must be smaller than 0.5
-	x.minus(xopt);
-	cout<< "Error is " << x.DNRM2() << endl;
-	assert( x.DNRM2() <= 0.5);
-	cout<< "Success..." << endl;
-
-	delete &A;
-	delete &xopt;
-	delete &b;
-	delete &x;
+	x -= xopt;
+	std::cout<< "Error is " << x.norm() << std::endl;
+	assert( x.norm() <= 0.5);
+	std::cout<< "Success..." << std::endl;
 
 	return 0;
 }

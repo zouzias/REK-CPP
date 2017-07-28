@@ -1,47 +1,49 @@
 #include "REKSolver.hpp"
-#include "../vector/impl/DenseVector.hpp"
-#include "../samplers/AliasSampler.hpp"
 
-DoubleVector&	 REKSolver::solve(const DoubleMatrix& A, const DoubleVector& b, double MaxSeconds){
-	DoubleVector& vector = *new DenseVector();
+RowVector REKSolver::solve(MatrixXd& A, const RowVector& b, double MaxSeconds) const{
+	RowVector vector(A.cols());
 	return vector;
 };
 
 
-DoubleVector& REKSolver::solve(const DoubleMatrix& A, const DoubleVector& b, long MaxIterations){
+RowVector REKSolver::solve(MatrixXd& A, const RowVector& b, long MaxIterations) const{
 	double val;
-  int i_k, j_k;
-  DoubleVector& x = *new DenseVector(A.numCols());
-  DoubleVector& z = *new DenseVector(b);
-  DoubleVector& rowNorms = A.rowNorms();
-	DoubleVector& columnNorms = A.columnNorms();
+  	long i_k, j_k;
+  	RowVector x(A.cols());
+	RowVector z(b);
+	RowVector rowNorms(A.rows());
+	RowVector columnNorms(A.cols());
 
-  AliasSampler rowSampler(rowNorms);
-	AliasSampler colSampler(columnNorms);
+    x.setZero();
+    for (int i = 0 ; i < A.rows(); i++)
+        rowNorms(i) = A.row(i).squaredNorm();
+
+    for (int j = 0 ; j < A.cols(); j++)
+        columnNorms(j) = A.col(j).squaredNorm();
+
+  	// AliasSampler rowSampler(rowNorms);
+	// AliasSampler colSampler(columnNorms);
 
 	// Initialize Alias samplers, O(n)
-	rowSampler.initSampler();
-	colSampler.initSampler();
+	// rowSampler.initSampler();
+	// colSampler.initSampler();
 
-  for (int k = 0; k < MaxIterations; k++) {
-  	i_k = rowSampler.walkerSample();
-  	j_k = colSampler.walkerSample();
+  	for (int k = 0; k < MaxIterations; k++) {
+  		// i_k = rowSampler.walkerSample();
+  		// j_k = colSampler.walkerSample();
 
 		// Extended Kaczmarz
-		//i_k = k % A.getRowDimension();
-		//j_k = k % A.getColumnDimension();
+		i_k = k % A.rows();
+		j_k = k % A.cols();
 
-    val = -z.DDOT(A.getColumn(j_k)) / columnNorms.get(j_k);     // val = - dot(z, A(:, j_k)) / colProbs(j_k)
-    z.DAXPY(val, A.getColumn(j_k));                             // z = z + val * A(:, j_k);
+        val = - z.dot(A.col(j_k)) / columnNorms(j_k);     // val = - dot(z, A(:, j_k)) / colProbs(j_k)
 
-    val = x.DDOT(A.getRow(i_k));                                // val = dot(x, A(i_k, :))
-    val = (b.get(i_k) - z.get(i_k) - val) / rowNorms.get(i_k);  // val = (b(i_k) - z(i_k) - val) / roProbs(i_k)
-		x.DAXPY(val, A.getRow(i_k));                                // x = x + val * A(i_k, :);
+        z += val * A.col(j_k);                             // z = z + val * A(:, j_k);
+
+        val = x.dot(A.row(i_k));                                // val = dot(x, A(i_k, :))
+        val = (b(i_k) - z(i_k) - val) / rowNorms(i_k);  // val = (b(i_k) - z(i_k) - val) / roProbs(i_k)
+
+        x += val * A.row(i_k);                                // x = x + val * A(i_k, :);
   }
-
-	delete &rowNorms;
-	delete &columnNorms;
-	delete &z;
-	
-  return x;
+    return x;
 };
