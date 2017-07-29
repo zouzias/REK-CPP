@@ -1,20 +1,15 @@
-#ifndef ALIASSAMPLER_HPP_
-#define ALIASSAMPLER_HPP_
+#pragma once
 
 #include<vector>
 #include <cassert>
 #include <cstdlib>
 #include <eigen3/Eigen/Dense>
 
+
 // Needed for Walker sampling
-#define real double
 #ifndef uint
 #define uint unsigned int
 #endif
-
-using namespace Eigen;
-
-typedef Matrix<double, Dynamic, 1> RowVector;
 
 
 class AliasSampler{
@@ -28,9 +23,11 @@ private:
 
 public:
 
-  ~AliasSampler(){};
+  ~AliasSampler() = default;
 
-  AliasSampler(const std::vector<double> probs): A(probs.size() + 2), B(probs.size() + 2), Y(probs.size() + 2){
+  explicit AliasSampler(const std::vector<double>& probs): A(probs.size() + 2),
+                                                           B(probs.size() + 2),
+                                                           Y(probs.size() + 2){
     uint j;
     double sum = 0;
 
@@ -46,7 +43,9 @@ public:
 
   };
 
-  AliasSampler(const RowVector& probs): A(probs.size() + 2), B(probs.size() + 2), Y(probs.size() + 2){
+  explicit AliasSampler(const Eigen::RowVectorXd& probs): A(probs.size() + 2),
+                                                          B(probs.size() + 2),
+                                                          Y(probs.size() + 2){
 
     uint j;
     double sum = 0;
@@ -54,18 +53,18 @@ public:
     this->N = (unsigned int)probs.size();
 
     for (j = 0; j < N; j++)
-        sum += probs(j, 1);
+        sum += probs(j);
 
     sum = 1 / sum;
 
     // Normalize it now
     for (j = 0; j < N; j++)
-        Y[j + 1] = probs(j, 1) * sum;
+        Y[j + 1] = probs(j) * sum;
 
   };
 
   std::vector<uint>* sample(unsigned int numSamples){
-    std::vector<uint>* samples = new std::vector<uint>(numSamples);
+    auto samples = new std::vector<uint>(numSamples);
     // Sample from Alias Sampler
     for (unsigned int k = 0; k < numSamples; k++)
         (*samples)[k] = walkerSample();
@@ -128,7 +127,7 @@ public:
 
   uint walkerSample (){
     uint i;
-    real r;
+    double r;
     /* Let i = random uniform integer from {1,2,...N};  */
     i = 1 + (uint) ((N - 1) * drand48());
     r = drand48();
@@ -138,5 +137,3 @@ public:
     return i - 1;
   }
 };
-
-#endif /* ALIASMETHOD_HPP_ */

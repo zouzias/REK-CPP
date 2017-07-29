@@ -5,9 +5,7 @@ set(CMAKE_CXX_STANDARD 11)
 set(EXECUTABLE_OUTPUT_PATH "bin")
 
 set(SOURCE_FILES
-        algorithms/REKSolver.cpp
         algorithms/REKSolver.hpp
-        samplers/AliasSampler.cpp
         samplers/AliasSampler.hpp)
 
 add_executable(rek_cpp ${SOURCE_FILES} main.cpp)
