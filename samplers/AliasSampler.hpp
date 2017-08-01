@@ -6,20 +6,17 @@
 #include <eigen3/Eigen/Dense>
 
 
-// Needed for Walker sampling
-#ifndef uint
-#define uint unsigned int
-#endif
-
-
 class AliasSampler{
 
 private:
 
-  unsigned int N;
-  std::vector<uint> A;
-  std::vector<uint> B;
-  std::vector<double> Y;
+    AliasSampler(const AliasSampler& ) = delete;
+    AliasSampler(const AliasSampler&& ) = delete;
+
+    unsigned int N;
+    std::vector<unsigned int> A;
+    std::vector<unsigned int> B;
+    std::vector<double> Y;
 
 public:
 
@@ -28,7 +25,7 @@ public:
   explicit AliasSampler(const std::vector<double>& probs): A(probs.size() + 2),
                                                            B(probs.size() + 2),
                                                            Y(probs.size() + 2){
-    uint j;
+    unsigned int j;
     double sum = 0;
 
     this->N = (unsigned int)probs.size();
@@ -47,7 +44,7 @@ public:
                                                           B(probs.size() + 2),
                                                           Y(probs.size() + 2){
 
-    uint j;
+    unsigned int j;
     double sum = 0;
 
     this->N = (unsigned int)probs.size();
@@ -63,8 +60,8 @@ public:
 
   };
 
-  std::vector<uint>* sample(unsigned int numSamples){
-    auto samples = new std::vector<uint>(numSamples);
+  std::vector<unsigned int>* sample(unsigned int numSamples){
+    auto samples = new std::vector<unsigned int>(numSamples);
     // Sample from Alias Sampler
     for (unsigned int k = 0; k < numSamples; k++)
         (*samples)[k] = walkerSample();
@@ -73,7 +70,7 @@ public:
   };
 
   void initSampler(){
-    uint i, j, k;
+    unsigned int i, j, k;
     assert(1 <= N);
     for (i = 1; i <= N; i++) {
         A[i] = i;
@@ -125,11 +122,11 @@ public:
     }
   };
 
-  uint walkerSample (){
-    uint i;
+  unsigned int walkerSample (){
+    unsigned int i;
     double r;
     /* Let i = random uniform integer from {1,2,...N};  */
-    i = 1 + (uint) ((N - 1) * drand48());
+    i = 1 + (unsigned int) ((N - 1) * drand48());
     r = drand48();
     if (r > Y[i])
         i = A[i];

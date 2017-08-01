@@ -8,7 +8,7 @@
 using namespace Eigen;
 typedef Matrix<double, Dynamic, 1> RowVector;
 
-class REKSolver {
+class RekSolver {
     private:
 
     RowVector solve(SparseMatrix<double, RowMajor> &A,
@@ -38,12 +38,9 @@ class REKSolver {
         colSampler.initSampler();
 
         for (int k = 0; k < MaxIterations; k++) {
+
             i_k = rowSampler.walkerSample();
             j_k = colSampler.walkerSample();
-
-            // Extended Kaczmarz
-            // i_k = k % A.rows();
-            // j_k = k % A.cols();
 
             val = -AColMajor.col(j_k).dot(z) / columnNorms(j_k);     // val = - dot(z, A(:, j_k)) / colProbs(j_k)
             z += val * AColMajor.col(j_k);                           // z = z + val * A(:, j_k);
@@ -58,7 +55,7 @@ class REKSolver {
     }
 
     public:
-        REKSolver() = default;
+        RekSolver() = default;
 
 
         RowVector solve(Matrix<double, Dynamic, Dynamic> &A,
@@ -69,11 +66,12 @@ class REKSolver {
         }
 
         /**
+         * Returns the solution to Ax=b using the Randomized Extended Kaczmarz method
          *
-         * @param A
-         * @param b
-         * @param MaxIterations
-         * @return
+         * @param A Input dense matrix
+         * @param b Right hand side vector
+         * @param MaxIterations Maximum number of iterations
+         * @return Returns an approximate solution to ||Ax - b||_2
          */
         RowVector solve(Matrix<double, Dynamic, Dynamic> &A,
                                          const RowVector &b,
@@ -120,12 +118,13 @@ class REKSolver {
         }
 
     /**
-     *
-     * @param A
-     * @param b
-     * @param MaxIterations
-     * @return
-     */
+    * Returns the solution to Ax=b using the Randomized Extended Kaczmarz method
+    *
+    * @param A Input sparse matrix in row major format
+    * @param b Right hand side vector
+    * @param MaxIterations Maximum number of iterations
+    * @return Returns an approximate solution to ||Ax - b||_2
+    */
     Matrix<double, Dynamic, 1> solve(SparseMatrix<double, RowMajor> &A,
                                      const Matrix<double, Dynamic, 1> &b,
                                      long MaxIterations) const {
@@ -141,6 +140,14 @@ class REKSolver {
         return solve(A, AColMajor, b, MaxIterations);
     };
 
+    /**
+    * Returns the solution to Ax=b using the Randomized Extended Kaczmarz method
+    *
+    * @param A Input sparse matrix in column major format
+    * @param b Right hand side vector
+    * @param MaxIterations Maximum number of iterations
+    * @return Returns an approximate solution to ||Ax - b||_2
+    */
     Matrix<double, Dynamic, 1> solve(SparseMatrix<double, ColMajor> &AColMajor,
                                      const RowVector &b,
                                      long MaxIterations) const {

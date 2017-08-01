@@ -1,5 +1,5 @@
 #include <iostream>
-#include "algorithms/REKSolver.hpp"
+#include "algorithms/RekSolver.hpp"
 
 using namespace Eigen;
 
@@ -14,7 +14,7 @@ int main() {
     A.setRandom();
     RowVector b = A * xopt;
 
-    REKSolver solver = REKSolver();
+    RekSolver solver = RekSolver();
 
     long ITERS = 1000000;
     RowVector x = solver.solve(A, b, ITERS);
