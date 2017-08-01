@@ -1,7 +1,7 @@
 #include <iostream>
 #include <random>
 
-#include "algorithms/REKSolver.hpp"
+#include "algorithms/RekSolver.hpp"
 
 using namespace Eigen;
 
@@ -20,7 +20,7 @@ SparseMatrix<double, RowMajor> randomSparseMatrix(int m, int n, double threshold
         }
 
     SparseMatrix<double, RowMajor> mat(m, n);
-    mat.resizeNonZeros(tripletList.size());
+    mat.resizeNonZeros((int)tripletList.size());
     mat.setFromTriplets(tripletList.begin(), tripletList.end());
 
     return mat;
@@ -37,7 +37,7 @@ int main() {
 	xopt.setRandom();
 	RowVector b = A * xopt;
 
-	REKSolver solver = REKSolver();
+	RekSolver solver = RekSolver();
 
 	long ITERS = 10000;
     std::cout << "b : " << b << std::endl;
@@ -46,7 +46,7 @@ int main() {
 
 	// Error must be smaller than 0.5
     RowVector residual = (x - xopt) / std::sqrt(n);
-	std::cout<< "Error is " << residual.norm() << std::endl;
+	std::cout<< "Least squares error is " << residual.norm() << std::endl;
 	assert( residual.norm() <= 0.5);
 	std::cout<< "Success..." << std::endl;
 

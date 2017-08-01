@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "algorithms/REKSolver.hpp"
+#include "algorithms/RekSolver.hpp"
 
 int main() {
 	unsigned int m= 100, n = 10;
@@ -11,7 +11,7 @@ int main() {
 	A.setRandom();
     RowVector b = A * xopt;
 
-	auto solver = REKSolver();
+	auto solver = RekSolver();
 
 	long ITERS = 50000;
 
