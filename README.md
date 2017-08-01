@@ -1,61 +1,53 @@
-<h2> Randomized Extended Kaczmarz (C++) <img src="https://travis-ci.org/zouzias/REK-CPP.svg?branch=master"/></h2>
-<h3> Overview </h3>
+## Randomized Extended Kaczmarz (C++) <img src="https://travis-ci.org/zouzias/REK-CPP.svg?branch=master"/>
+
+### Overview 
 The Randomized Extended Kaczmarz algorithm is a randomized algorithm for solving least-squares/linear regression problems.
 
-<br>
-[<b>Randomized Extended Kaczmarz for Solving Least-Squares.</b>](http://dx.doi.org/10.1137/120889897)
-<br>
+- [<b>Randomized Extended Kaczmarz for Solving Least-Squares.</b>](http://dx.doi.org/10.1137/120889897)
 SIAM. J. Matrix Anal. & Appl., 34(2), 773–793. (21 pages) 
-<br>
 Authors: [Anastasios Zouzias](https://github.com/zouzias) and Nikolaos Freris 
-<br>
-<h3>
-Installation
-</h3>
+
+### Installation
 
 Clone the project. Type type
 
-<code>make && make test</code>
-<br>
-<code>./main</code>
+```bash
+./build.sh
+./build/bin/test_{dense|sparse|sparse_colmajor}
+```
 
-The above code runs a simple instance of least-squares for a gaussian random matrix A and gaussian vector b. See 'main.c' for more details.
+The above code runs a simple instance of least-squares for a gaussian random matrix A and gaussian vector b.
 
-<h3>
-Usage
-</h3>
+## Usage
 
 ```
-// Initialize random m x n matrix A and xopt vector
 unsigned int m= 100, n = 10;
-DoubleMatrix& A = *new SparseMatrix(m,n);
-DoubleVector& xopt = *new DenseVector(n);
-xopt.random();
-A.random();
 
-// Compute b=Ax
-DoubleVector& b = A.times(xopt);
+Matrix<double, Dynamic, Dynamic> A(m, n);
+RowVector xopt(n);
+xopt.setRandom();
+A.setRandom();
+RowVector b = A * xopt;
 
-// Iterate for 1000000 iterations
-long ITERS = 1000000;
-REKSolver solver = REKSolver();
-DoubleVector& x = solver.solve(A, b, ITERS);
+auto solver = RekSolver();
 
-// Error must be smaller than 0.5
-x.minus(xopt);
-cout<< "Error is " << x.DNRM2() << endl;
-assert( x.DNRM2() <= 0.5);
-cout<< "Success..." << endl;
+long ITERS = 50000;
+
+RowVector x = solver.solve(A, b, ITERS);
+
+std::cout << "(x , xopt)" << std::endl;
+for (unsigned int j = 0 ; j < A.cols(); j++){
+    std::cout << x(j) << " , " << xopt(j) << std::endl;
+}
+
+RowVector residual = x - xopt;
+std::cout << "Least Squares error: " << residual.norm() << std::endl;
 ```
 
-<h4>
-Bugs
-</h4>
+## Bugs
 Please report bugs by opening a new [issue](https://github.com/zouzias/REK-CPP/issues/new).
 
-<h4>
-Implementation Details
-</h4>
+### Implementation Details
 REK-BLAS is an implementation of REK with two additional technical features. First, REK-BLAS utilizes level-1 BLAS routines for 
 all operations of REK and second REK-BLAS additionally stores explicitly the transpose of A for more efficiently 
 memory access of both the rows and columns of A using BLAS (see the above paper for more details). 
@@ -65,9 +57,7 @@ from any given discrete distribution [Vos91]. In particular, the alias method, a
 to a uniform random variable on [0,1] in constant time and linear time preprocessing, generates one sample
 of a given distribution in constant time. We use an implementation of W. D. Smith.
 
-<h4>
-Credits and acknowledgments
-</h4>
+### Credits and acknowledgments
 
 Credits go to Warren D. Smith for implementing the aliasing method [Vos91] in C.
 <br><br>
