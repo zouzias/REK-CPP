@@ -5,10 +5,11 @@
 
 using namespace Eigen;
 
-SparseMatrix<double> randomSparseMatrix(long m, long n, double threshold){
-    std::default_random_engine gen;
-    std::uniform_real_distribution<double> dist(0.0,1.0);
+typedef Matrix<double, Dynamic, 1> RowVector;
 
+SparseMatrix<double, RowMajor> randomSparseMatrix(int m, int n, double threshold){
+    std::default_random_engine gen;
+    std::uniform_real_distribution<double> dist(0.0, 1.0);
 
     std::vector<Eigen::Triplet<double> > tripletList;
     for(int i=0;i<m;++i)
@@ -18,7 +19,8 @@ SparseMatrix<double> randomSparseMatrix(long m, long n, double threshold){
                 tripletList.emplace_back(Eigen::Triplet<double>(i, j, v_ij));
         }
 
-    SparseMatrix<double> mat(m, n);
+    SparseMatrix<double, RowMajor> mat(m, n);
+    mat.resizeNonZeros(tripletList.size());
     mat.setFromTriplets(tripletList.begin(), tripletList.end());
 
     return mat;
@@ -28,17 +30,19 @@ int main() {
     srand((unsigned int) time(0));
     unsigned int m = 100, n = 10;
 
-	// SparseMatrix<double, RowMajor> A = randomSparseMatrix(m, n);
-    MatrixXd A(m, n);
+    SparseMatrix<double, RowMajor> A = randomSparseMatrix(m, n, 0.5);
+    std::cout << "A is: " << std::endl;
+    std::cout << A << std::endl;
     RowVector xopt(n);
 	xopt.setRandom();
-    A.setRandom();
 	RowVector b = A * xopt;
 
 	REKSolver solver = REKSolver();
 
-	long ITERS = 1000000;
-	RowVector x = solver.solve(A, b, ITERS);
+	long ITERS = 10000;
+    std::cout << "b : " << b << std::endl;
+
+    RowVector x = solver.solve(A, b, ITERS);
 
 	// Error must be smaller than 0.5
     RowVector residual = (x - xopt) / std::sqrt(n);

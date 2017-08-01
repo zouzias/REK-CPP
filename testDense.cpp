@@ -8,7 +8,7 @@ int main() {
     srand((unsigned int) time(0));
     unsigned int m = 100, n = 10;
 
-    MatrixXd A(m, n);
+    Matrix<double, Dynamic, Dynamic> A(m, n);
     RowVector xopt(n);
     xopt.setRandom();
     A.setRandom();
