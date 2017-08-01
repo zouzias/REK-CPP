@@ -132,10 +132,16 @@ class RekSolver {
         AColMajor.reserve(A.nonZeros());
 
         // TODO: Fix this with sparse iter
-        for (int i = 0 ; i < A.rows(); i++)
+        /*for (int i = 0 ; i < A.rows(); i++)
             for (int j = 0; j < A.cols(); j++)
                 if (A.coeff(i,j))
                     AColMajor.insert(i,j) = A.coeff(i, j);
+        */
+
+        for (int k = 0; k < A.outerSize(); ++k)
+            for (SparseMatrix<double, RowMajor>::InnerIterator it(A, k); it; ++it) {
+                AColMajor.insert(it.row(), it.col()) = it.value();
+            }
 
         return solve(A, AColMajor, b, MaxIterations);
     };
@@ -155,10 +161,9 @@ class RekSolver {
 
         // TODO: Fix this with sparse iter
         A.reserve(AColMajor.nonZeros());
-        for (int i = 0 ; i < A.rows(); i++)
-            for (int j = 0; j < A.cols(); j++)
-                if (AColMajor.coeff(i,j))
-                    A.insert(i,j) = AColMajor.coeff(i, j);
+        for (int k = 0; k< AColMajor.outerSize(); ++k)
+            for (SparseMatrix<double, ColMajor>::InnerIterator it(AColMajor, k); it; ++it)
+                A.insert(it.row(), it.col()) = it.value();
 
         return solve(A, AColMajor, b, MaxIterations);
     };

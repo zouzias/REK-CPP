@@ -13,5 +13,7 @@ script:
 - ./build.sh
 - echo "Running valgrind tests on dense matrices..."
 - valgrind --leak-check=full --error-exitcode=1 ./build/bin/test_dense
-- echo "Running valgrind tests on sparse matrices..."
+- echo "Running valgrind tests on sparse row major matrices..."
 - valgrind --leak-check=full --error-exitcode=1 ./build/bin/test_sparse
+- echo "Running valgrind tests on sparse column major matrices..."
+- valgrind --leak-check=full --error-exitcode=1 ./build/bin/test_sparse_colmajor
