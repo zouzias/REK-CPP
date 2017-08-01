@@ -7,7 +7,7 @@ using namespace Eigen;
 
 typedef Matrix<double, Dynamic, 1> RowVector;
 
-SparseMatrix<double, RowMajor> randomSparseMatrix(int m, int n, double threshold){
+SparseMatrix<double, ColMajor> randomSparseMatrix(int m, int n, double threshold){
     std::default_random_engine gen;
     std::uniform_real_distribution<double> dist(0.0, 1.0);
 
@@ -19,7 +19,7 @@ SparseMatrix<double, RowMajor> randomSparseMatrix(int m, int n, double threshold
                 tripletList.emplace_back(Eigen::Triplet<double>(i, j, v_ij));
         }
 
-    SparseMatrix<double, RowMajor> mat(m, n);
+    SparseMatrix<double, ColMajor> mat(m, n);
     mat.resizeNonZeros((int)tripletList.size());
     mat.setFromTriplets(tripletList.begin(), tripletList.end());
 
@@ -30,7 +30,7 @@ int main() {
     srand((unsigned int) time(0));
     unsigned int m = 100, n = 10;
 
-    SparseMatrix<double, RowMajor> A = randomSparseMatrix(m, n, 0.5);
+    SparseMatrix<double, ColMajor> A = randomSparseMatrix(m, n, 0.5);
     RowVector xopt(n);
 	xopt.setRandom();
 	RowVector b = A * xopt;
