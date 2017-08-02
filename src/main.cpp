@@ -13,7 +13,7 @@ int main() {
 
 	auto solver = RekSolver();
 
-	long ITERS = 50000;
+	long ITERS = 100000;
 
     RowVector x = solver.solve(A, b, ITERS);
 
