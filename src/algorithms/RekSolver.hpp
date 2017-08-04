@@ -42,13 +42,14 @@ class RekSolver {
             i_k = rowSampler.walkerSample();
             j_k = colSampler.walkerSample();
 
-            val = -AColMajor.col(j_k).dot(z) / columnNorms(j_k);     // val = - dot(z, A(:, j_k)) / colProbs(j_k)
-            z += val * AColMajor.col(j_k);                           // z = z + val * A(:, j_k);
-            val = A.row(i_k).dot(x);                                 // val = dot(x, A(i_k, :))
-            val = (b(i_k) - z(i_k) - val) / rowNorms(i_k);           // val = (b(i_k) - z(i_k) - val) / rowProbs(i_k)
+            val = -AColMajor.col(j_k).dot(z) / columnNorms(j_k);
+            z += val * AColMajor.col(j_k);
+            val = A.row(i_k).dot(x);
+            val = (b(i_k) - z(i_k) - val) / rowNorms(i_k);
 
             // TODO: .toDense() seems to be required here!
-            x += val * A.row(i_k).toDense();                                // x = x + val * A(i_k, :);
+            // FIXME: replace .toDense() with iteration over spark i_k row
+            x += val * A.row(i_k).toDense();
         }
 
         return x;
@@ -105,14 +106,14 @@ class RekSolver {
                 // i_k = k % A.rows();
                 // j_k = k % A.cols();
 
-                val = -z.dot(A.col(j_k)) / columnNorms(j_k);     // val = - dot(z, A(:, j_k)) / colProbs(j_k)
+                val = -z.dot(A.col(j_k)) / columnNorms(j_k);
 
-                z += val * A.col(j_k);                             // z = z + val * A(:, j_k);
+                z += val * A.col(j_k);
 
-                val = x.dot(A.row(i_k));                                // val = dot(x, A(i_k, :))
-                val = (b(i_k) - z(i_k) - val) / rowNorms(i_k);  // val = (b(i_k) - z(i_k) - val) / roProbs(i_k)
+                val = x.dot(A.row(i_k));
+                val = (b(i_k) - z(i_k) - val) / rowNorms(i_k);
 
-                x += val * A.row(i_k);                                // x = x + val * A(i_k, :);
+                x += val * A.row(i_k);
             }
             return x;
         }
@@ -129,15 +130,8 @@ class RekSolver {
                                      const Matrix<double, Dynamic, 1> &b,
                                      long MaxIterations) const {
         SparseMatrix<double, ColMajor> AColMajor(A.rows(), A.cols());
+
         AColMajor.reserve(A.nonZeros());
-
-        // TODO: Fix this with sparse iter
-        /*for (int i = 0 ; i < A.rows(); i++)
-            for (int j = 0; j < A.cols(); j++)
-                if (A.coeff(i,j))
-                    AColMajor.insert(i,j) = A.coeff(i, j);
-        */
-
         for (int k = 0; k < A.outerSize(); ++k)
             for (SparseMatrix<double, RowMajor>::InnerIterator it(A, k); it; ++it) {
                 AColMajor.insert(it.row(), it.col()) = it.value();
@@ -159,7 +153,6 @@ class RekSolver {
                                      long MaxIterations) const {
         SparseMatrix<double, RowMajor> A(AColMajor.rows(), AColMajor.cols());
 
-        // TODO: Fix this with sparse iter
         A.reserve(AColMajor.nonZeros());
         for (int k = 0; k< AColMajor.outerSize(); ++k)
             for (SparseMatrix<double, ColMajor>::InnerIterator it(AColMajor, k); it; ++it)
