@@ -48,9 +48,9 @@ std::cout << "Least Squares error: " << residual.norm() << std::endl;
 Please report bugs by opening a new [issue](https://github.com/zouzias/REK-CPP/issues/new).
 
 ### Implementation Details
-REK-BLAS is an implementation of REK with two additional technical features. First, REK-BLAS utilizes level-1 BLAS routines for 
-all operations of REK and second REK-BLAS additionally stores explicitly the transpose of A for more efficiently 
-memory access of both the rows and columns of A using BLAS (see the above paper for more details). 
+REK-CPP is an implementation of REK with two additional technical features. First, REK-CPP utilizes level-1 BLAS routines for 
+all operations of REK and second REK-CPP additionally stores explicitly the transpose of A for more efficient
+memory access of both the rows and columns of A. 
 
 The sampling operations of REK are implemented using the so-called ``alias method'' for generating samples 
 from any given discrete distribution [Vos91]. In particular, the alias method, assuming access 
