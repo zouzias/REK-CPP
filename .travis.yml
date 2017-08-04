@@ -12,6 +12,8 @@ before_install:
 script:
 - echo "building"
 - ./build.sh
+- echo "Run tests"
+- cd build && make test
 - echo "Running valgrind tests on dense matrices..."
 - valgrind --leak-check=full --error-exitcode=1 ./build/bin/test_dense
 - echo "Running valgrind tests on sparse row major matrices..."

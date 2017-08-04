@@ -1,5 +1,5 @@
 #include <iostream>
-#include "algorithms/RekSolver.hpp"
+#include "../src/algorithms/RekSolver.hpp"
 
 using namespace Eigen;
 
