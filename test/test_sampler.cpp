@@ -1,7 +1,7 @@
 #include <iostream>
 #include<vector>
 
-#include "../src/samplers/AliasSampler.hpp"
+#include "samplers/AliasSampler.hpp"
 
 using namespace std;
 

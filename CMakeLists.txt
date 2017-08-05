@@ -12,6 +12,8 @@ set(VERSION_PATCH 0)
 set(CMAKE_CXX_STANDARD 11)
 set(EXECUTABLE_OUTPUT_PATH "bin")
 
+include_directories(src)
+
 set(SOURCE_FILES
         src/algorithms/RekSolver.hpp
         src/samplers/AliasSampler.hpp)

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <random>
 
-#include "../src/algorithms/RekSolver.hpp"
+#include "algorithms/RekSolver.hpp"
 
 using namespace Eigen;
 

@@ -3,7 +3,7 @@
 #include<iostream>
 #include <eigen3/Eigen/Dense>
 #include <eigen3/Eigen/Sparse>
-#include "../samplers/AliasSampler.hpp"
+#include "samplers/AliasSampler.hpp"
 
 using namespace Eigen;
 typedef Matrix<double, Dynamic, 1> RowVector;
