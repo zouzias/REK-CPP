@@ -11,10 +11,53 @@ typedef Matrix<double, Dynamic, 1> RowVector;
 class RekSolver {
     private:
 
+    /** Periodically check for convergence */
+    int blockSize_ = 1000;
+
+    constexpr static double tolerance_ = 10e-5;
+
+    bool hasConverged(SparseMatrix<double, RowMajor> &A,
+                      SparseMatrix<double, ColMajor> &AColMajor,
+                      const Matrix<double, Dynamic, 1> &x,
+                      const Matrix<double, Dynamic, 1> &b,
+                      const Matrix<double, Dynamic, 1> &z,
+                      double tolerance) const {
+
+        RowVector residual =  A * x - b + z;
+        bool condOne = residual.norm() < tolerance;
+
+        // Early return
+        if (!condOne) return false;
+
+        RowVector zA = (z.transpose() * AColMajor);
+        bool condTwo  =  zA.norm() < tolerance;
+        return condOne && condTwo;
+    }
+
+    // FIXME: Is this necessary?
+    bool hasConvergedDense(Matrix<double, Dynamic, Dynamic, RowMajor> &A,
+                           Matrix<double, Dynamic, Dynamic, ColMajor> &AColMajor,
+                      const Matrix<double, Dynamic, 1> &x,
+                      const Matrix<double, Dynamic, 1> &b,
+                      const Matrix<double, Dynamic, 1> &z,
+                      double tolerance) const {
+
+        RowVector residual =  A * x - b + z;
+        bool condOne = residual.norm() < tolerance;
+
+        // Early return
+        if (!condOne) return false;
+
+        RowVector zA = (z.transpose() * AColMajor);
+        bool condTwo  =  zA.norm() < tolerance;
+        return condOne && condTwo;
+    }
+
     RowVector solve(SparseMatrix<double, RowMajor> &A,
                                      SparseMatrix<double, ColMajor> &AColMajor,
                                      const Matrix<double, Dynamic, 1> &b,
-                                     long MaxIterations) const {
+                                     long MaxIterations,
+                                     double tolerance = tolerance_) const {
         double val;
         int i_k, j_k;
         RowVector x(A.cols());
@@ -39,6 +82,10 @@ class RekSolver {
 
         for (int k = 0; k < MaxIterations; k++) {
 
+            // Check for convergence every blockSize_ iterations
+            if ((k + 1) % blockSize_ == 0 && hasConverged(A, AColMajor, x, b, z, tolerance))
+                break;
+
             i_k = rowSampler.walkerSample();
             j_k = colSampler.walkerSample();
 
@@ -60,13 +107,15 @@ class RekSolver {
        *
        * @param AColMajor Input dense matrix
        * @param b Right hand side vector
-       * @param MaxIterations Maximum number of iterations
+       * @param maxIterations Maximum number of iterations
+       * @param tolerance Accuracy tolerance, default tolerance_
        * @return Returns an approximate solution to ||Ax - b||_2
        */
     RowVector solve(Matrix<double, Dynamic, Dynamic, ColMajor> &AColMajor,
                     Matrix<double, Dynamic, Dynamic, RowMajor> &ARowMajor,
                     const RowVector &b,
-                    long MaxIterations) const {
+                    long maxIterations,
+                    double tolerance = tolerance_) const {
         double val;
         long i_k, j_k;
         RowVector x(AColMajor.cols());
@@ -81,7 +130,12 @@ class RekSolver {
         for (int j = 0; j < AColMajor.cols(); j++)
             columnNorms(j) = AColMajor.col(j).squaredNorm();
 
-        for (int k = 0; k < MaxIterations; k++) {
+        for (int k = 0; k < maxIterations; k++) {
+
+            // Check for convergence every blockSize_ iterations
+            if ((k + 1) % blockSize_ == 0 && hasConvergedDense(ARowMajor, AColMajor, x, b, z, tolerance))
+                break;
+
             // Extended Kaczmarz
              i_k = k % AColMajor.rows();
              j_k = k % AColMajor.cols();
@@ -121,12 +175,14 @@ class RekSolver {
     *
     * @param A Input sparse matrix in row major format
     * @param b Right hand side vector
-    * @param MaxIterations Maximum number of iterations
+    * @param maxIterations Maximum number of iterations
+    * @param tolerance Accuracy tolerance, default tolerance_
     * @return Returns an approximate solution to ||Ax - b||_2
     */
     Matrix<double, Dynamic, 1> solve(SparseMatrix<double, RowMajor> &A,
                                      const Matrix<double, Dynamic, 1> &b,
-                                     long MaxIterations) const {
+                                     long maxIterations,
+                                     double tolerance = tolerance_) const {
         SparseMatrix<double, ColMajor> AColMajor(A.rows(), A.cols());
 
         // Copy row major to column major sparse matrix
@@ -136,7 +192,7 @@ class RekSolver {
                 AColMajor.insert(it.row(), it.col()) = it.value();
             }
 
-        return solve(A, AColMajor, b, MaxIterations);
+        return solve(A, AColMajor, b, maxIterations, tolerance);
     };
 
     /**
@@ -144,12 +200,14 @@ class RekSolver {
     *
     * @param A Input sparse matrix in column major format
     * @param b Right hand side vector
-    * @param MaxIterations Maximum number of iterations
+    * @param maxIterations Maximum number of iterations
+    * @param tolerance Accuracy tolerance, default tolerance_
     * @return Returns an approximate solution to ||Ax - b||_2
     */
     Matrix<double, Dynamic, 1> solve(SparseMatrix<double, ColMajor> &AColMajor,
                                      const RowVector &b,
-                                     long MaxIterations) const {
+                                     long maxIterations,
+                                     double tolerance = tolerance_) const {
         SparseMatrix<double, RowMajor> A(AColMajor.rows(), AColMajor.cols());
 
         // Copy column major to row major Sparse matrix
@@ -158,6 +216,6 @@ class RekSolver {
             for (SparseMatrix<double, ColMajor>::InnerIterator it(AColMajor, k); it; ++it)
                 A.insert(it.row(), it.col()) = it.value();
 
-        return solve(A, AColMajor, b, MaxIterations);
+        return solve(A, AColMajor, b, maxIterations, tolerance);
     };
 };
