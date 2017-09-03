@@ -9,7 +9,7 @@ Authors: [Anastasios Zouzias](https://github.com/zouzias) and Nikolaos Freris
 
 ### Installation
 
-Clone the project. Type type
+Clone the project. Type
 
 ```bash
 ./build.sh
