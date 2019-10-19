@@ -5,8 +5,9 @@
 int main() {
 	
 	unsigned int m= 100, n = 10;
+    long ITERS = 100000;
 
-	Matrix<double, Dynamic, Dynamic> A(m, n);
+    Matrix<double, Dynamic, Dynamic> A(m, n);
 	RowVector xopt(n);
 	xopt.setRandom();
 	A.setRandom();
@@ -14,8 +15,6 @@ int main() {
 	RowVector b = A * xopt;
 	
 	auto solver = RekSolver();
-	long ITERS = 100000;
-	
 	RowVector x = solver.solve(A, b, ITERS);
 
 	std::cout << "(x , xopt)" << std::endl;

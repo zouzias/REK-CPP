@@ -29,6 +29,7 @@ SparseMatrix<double, RowMajor> randomSparseMatrix(int m, int n, double threshold
 int main() {
     srand((unsigned int) time(0));
     unsigned int m = 100, n = 10;
+    long ITERS = 10000;
 
     SparseMatrix<double, RowMajor> A = randomSparseMatrix(m, n, 0.5);
     RowVector xopt(n);
@@ -36,9 +37,6 @@ int main() {
 	RowVector b = A * xopt;
 
 	RekSolver solver = RekSolver();
-
-
-	long ITERS = 10000;
     RowVector x = solver.solve(A, b, ITERS);
 
 	// Error must be smaller than 0.5

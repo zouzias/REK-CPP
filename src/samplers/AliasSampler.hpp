@@ -9,20 +9,17 @@
 class AliasSampler{
 
 private:
-
-    AliasSampler(const AliasSampler& ) = delete;
-    AliasSampler(const AliasSampler&& ) = delete;
-
     unsigned int N;
     std::vector<unsigned int> A;
     std::vector<unsigned int> B;
     std::vector<double> Y;
 
 public:
+    AliasSampler(const AliasSampler& ) = delete;
+    AliasSampler(const AliasSampler&& ) = delete;
+    ~AliasSampler() = default;
 
-  ~AliasSampler() = default;
-
-  explicit AliasSampler(const std::vector<double>& probs): A(probs.size() + 2),
+    explicit AliasSampler(const std::vector<double>& probs): A(probs.size() + 2),
                                                            B(probs.size() + 2),
                                                            Y(probs.size() + 2){
     unsigned int j;

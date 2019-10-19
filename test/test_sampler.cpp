@@ -20,9 +20,9 @@ int main() {
 	std::vector<uint>* samples = alias.sample(numSamples);
 
 	cout << "Checking if random samples are in range [0, " << n - 1 << "]"<<endl;
-	for(unsigned int i = 0 ; i < samples->size(); i++){
-		assert(samples->at(i) >= 0);
-		assert(samples->at(i) < n);
+	for(unsigned int sample : *samples){
+		assert(sample >= 0);
+		assert(sample < n);
 	}
 	cout << "Success..."<<endl;
 

@@ -7,6 +7,7 @@ int main() {
 
     srand((unsigned int) time(0));
     unsigned int m = 100, n = 10;
+    long ITERS = 10000;
 
     Matrix<double, Dynamic, Dynamic> A(m, n);
     RowVector xopt(n);
@@ -15,8 +16,6 @@ int main() {
     RowVector b = A * xopt;
 
     RekSolver solver = RekSolver();
-
-    long ITERS = 10000;
     RowVector x = solver.solve(A, b, ITERS);
 
     // Error must be smaller than 0.5
