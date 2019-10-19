@@ -59,7 +59,7 @@ class RekSolver {
                                      long MaxIterations,
                                      double tolerance = tolerance_) const {
         double val;
-        int i_k, j_k;
+        long i_k, j_k;
         RowVector x(A.cols());
         RowVector z(b);
         RowVector rowNorms(A.rows());
@@ -67,10 +67,10 @@ class RekSolver {
 
         x.setZero();
 
-        for (int i = 0; i < A.rows(); i++)
+        for (long i = 0; i < A.rows(); i++)
             rowNorms(i) = A.row(i).squaredNorm();
 
-        for (int j = 0; j < AColMajor.cols(); j++)
+        for (long j = 0; j < AColMajor.cols(); j++)
             columnNorms(j) = AColMajor.col(j).squaredNorm();
 
         AliasSampler rowSampler(rowNorms);
@@ -80,7 +80,7 @@ class RekSolver {
         rowSampler.initSampler();
         colSampler.initSampler();
 
-        for (int k = 0; k < MaxIterations; k++) {
+        for (long k = 0; k < MaxIterations; k++) {
 
             // Check for convergence every blockSize_ iterations
             if ((k + 1) % blockSize_ == 0 && hasConverged(A, AColMajor, x, b, z, tolerance))
@@ -89,7 +89,7 @@ class RekSolver {
             i_k = rowSampler.walkerSample();
             j_k = colSampler.walkerSample();
 
-            val = -AColMajor.col(j_k).dot(z) / columnNorms(j_k);
+            val = - AColMajor.col(j_k).dot(z) / columnNorms(j_k);
             z += val * AColMajor.col(j_k);
             val = A.row(i_k).dot(x);
             val = (b(i_k) - z(i_k) - val) / rowNorms(i_k);
@@ -124,13 +124,14 @@ class RekSolver {
         RowVector columnNorms(AColMajor.cols());
 
         x.setZero();
-        for (int i = 0; i < ARowMajor.rows(); i++)
+
+        for (long i = 0; i < ARowMajor.rows(); i++)
             rowNorms(i) = ARowMajor.row(i).squaredNorm();
 
-        for (int j = 0; j < AColMajor.cols(); j++)
+        for (long j = 0; j < AColMajor.cols(); j++)
             columnNorms(j) = AColMajor.col(j).squaredNorm();
 
-        for (int k = 0; k < maxIterations; k++) {
+        for (long k = 0; k < maxIterations; k++) {
 
             // Check for convergence every blockSize_ iterations
             if ((k + 1) % blockSize_ == 0 && hasConvergedDense(ARowMajor, AColMajor, x, b, z, tolerance))
@@ -155,17 +156,10 @@ class RekSolver {
     public:
         RekSolver() = default;
 
-
-        RowVector solve(Matrix<double, Dynamic, Dynamic> &A,
-                                         const RowVector &b,
-                                         double MaxSeconds) const {
-            Matrix<double, Dynamic, 1> vector(A.cols());
-            return vector;
-        }
-
     RowVector solve(Matrix<double, Dynamic, Dynamic, ColMajor> &AColMajor,
                     const RowVector &b,
                     long MaxIterations) const {
+        // Duplicate input matrix to row major storage
         Matrix<double, Dynamic, Dynamic, RowMajor> ARowMajor(AColMajor);
         return solve(AColMajor, ARowMajor, b, MaxIterations);
     }
@@ -187,7 +181,7 @@ class RekSolver {
 
         // Copy row major to column major sparse matrix
         AColMajor.reserve(A.nonZeros());
-        for (int k = 0; k < A.outerSize(); ++k)
+        for (long k = 0; k < A.outerSize(); ++k)
             for (SparseMatrix<double, RowMajor>::InnerIterator it(A, k); it; ++it) {
                 AColMajor.insert(it.row(), it.col()) = it.value();
             }
@@ -210,9 +204,9 @@ class RekSolver {
                                      double tolerance = tolerance_) const {
         SparseMatrix<double, RowMajor> A(AColMajor.rows(), AColMajor.cols());
 
-        // Copy column major to row major Sparse matrix
+        // Copy column major to row major sparse matrix
         A.reserve(AColMajor.nonZeros());
-        for (int k = 0; k< AColMajor.outerSize(); ++k)
+        for (long k = 0; k< AColMajor.outerSize(); ++k)
             for (SparseMatrix<double, ColMajor>::InnerIterator it(AColMajor, k); it; ++it)
                 A.insert(it.row(), it.col()) = it.value();
 
