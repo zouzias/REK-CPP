@@ -3,7 +3,7 @@
 #include<vector>
 #include <cassert>
 #include <cstdlib>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 
 
 class AliasSampler{
