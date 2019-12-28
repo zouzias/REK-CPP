@@ -1,11 +1,11 @@
 #include <iostream>
-#include "algorithms/RekSolver.hpp"
+#include "algorithms/Solver.hpp"
 
-using namespace Eigen;
+using namespace rek;
 
 int main() {
 
-    srand((unsigned int) time(0));
+    srand((unsigned int) time(nullptr));
     unsigned int m = 100, n = 10;
     long ITERS = 10000;
 
@@ -15,7 +15,7 @@ int main() {
     A.setRandom();
     RowVector b = A * xopt;
 
-    RekSolver solver = RekSolver();
+    auto solver = Solver();
     RowVector x = solver.solve(A, b, ITERS);
 
     // Error must be smaller than 0.5
