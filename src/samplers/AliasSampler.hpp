@@ -7,6 +7,8 @@
 
 namespace rek {
 
+    namespace sample {
+
     class AliasSampler {
 
         unsigned int N;
@@ -133,4 +135,5 @@ namespace rek {
             return i - 1;
         }
     };
-}
+    } // namespace sample
+} // namespace rek

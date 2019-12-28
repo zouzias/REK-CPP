@@ -76,8 +76,8 @@ namespace rek {
             for (long j = 0; j < n; j++)
                 columnNorms(j) = AColMajor.col(j).squaredNorm();
 
-            AliasSampler rowSampler(rowNorms);
-            AliasSampler colSampler(columnNorms);
+            sample::AliasSampler rowSampler(rowNorms);
+            sample::AliasSampler colSampler(columnNorms);
 
             // Initialize Alias samplers, O(n)
             rowSampler.initSampler();

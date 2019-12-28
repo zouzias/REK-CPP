@@ -15,7 +15,7 @@ int main() {
 		prob[i] = std * drand48();
 	}
 
-	rek::AliasSampler alias(prob);
+	rek::sample::AliasSampler alias(prob);
 	alias.initSampler();
 	std::vector<uint> samples = alias.sample(numSamples);
 
