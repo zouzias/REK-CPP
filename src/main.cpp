@@ -1,10 +1,12 @@
 #include <iostream>
 
-#include "algorithms/RekSolver.hpp"
+#include "algorithms/Solver.hpp"
+
+using namespace rek;
 
 int main() {
-	
-	unsigned int m= 100, n = 10;
+
+    unsigned int m= 100, n = 10;
     long ITERS = 100000;
 
     Matrix<double, Dynamic, Dynamic> A(m, n);
@@ -14,7 +16,7 @@ int main() {
 
 	RowVector b = A * xopt;
 	
-	auto solver = RekSolver();
+	auto solver = rek::Solver();
 	RowVector x = solver.solve(A, b, ITERS);
 
 	std::cout << "(x , xopt)" << std::endl;

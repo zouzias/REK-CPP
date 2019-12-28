@@ -15,12 +15,12 @@ int main() {
 		prob[i] = std * drand48();
 	}
 
-	AliasSampler alias(prob);
+	rek::AliasSampler alias(prob);
 	alias.initSampler();
-	std::vector<uint>* samples = alias.sample(numSamples);
+	std::vector<uint> samples = alias.sample(numSamples);
 
 	cout << "Checking if random samples are in range [0, " << n - 1 << "]"<<endl;
-	for(unsigned int sample : *samples){
+	for(unsigned int sample :samples){
 		assert(sample >= 0);
 		assert(sample < n);
 	}

@@ -20,7 +20,10 @@ The above code runs a simple instance of least-squares for a gaussian random mat
 
 ## Usage
 
-```
+```c++
+
+using namespace Eigen;
+
 unsigned int m= 100, n = 10;
 
 Matrix<double, Dynamic, Dynamic> A(m, n);
@@ -29,7 +32,7 @@ xopt.setRandom();
 A.setRandom();
 RowVector b = A * xopt;
 
-auto solver = RekSolver();
+auto solver = rek::Solver();
 
 long ITERS = 50000;
 

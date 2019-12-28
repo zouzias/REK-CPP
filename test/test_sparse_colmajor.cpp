@@ -1,11 +1,9 @@
 #include <iostream>
 #include <random>
 
-#include "algorithms/RekSolver.hpp"
+#include "algorithms/Solver.hpp"
 
-using namespace Eigen;
-
-typedef Matrix<double, Dynamic, 1> RowVector;
+using namespace rek;
 
 SparseMatrix<double, ColMajor> randomSparseMatrix(int m, int n, double threshold){
     std::default_random_engine gen;
@@ -36,7 +34,7 @@ int main() {
 	xopt.setRandom();
 	RowVector b = A * xopt;
 
-	RekSolver solver = RekSolver();
+	auto solver = rek::Solver();
 	RowVector x = solver.solve(A, b, ITERS);
 
 	// Error must be smaller than 0.5
