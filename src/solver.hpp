@@ -1,9 +1,10 @@
 #pragma once
 
-#include "samplers/AliasSampler.hpp"
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
 #include <iostream>
+
+#include "sampler.hpp"
 
 namespace rek {
 
@@ -30,8 +31,7 @@ class Solver {
       return false;
 
     RowVector zA = (z.transpose() * AColMajor);
-    bool condTwo = zA.norm() < tolerance;
-    return condOne && condTwo;
+    return zA.norm() < tolerance;
   }
 
   // FIXME: Is this necessary? Duplicate with hasConverged()
@@ -48,8 +48,7 @@ class Solver {
       return false;
 
     RowVector zA = (z.transpose() * AColMajor);
-    bool condTwo = zA.norm() < tolerance;
-    return condOne && condTwo;
+    return zA.norm() < tolerance;
   }
 
   RowVector solve(SparseMatrix<double, RowMajor> &A,
@@ -64,11 +63,13 @@ class Solver {
 
     x.setZero();
 
-    for (long i = 0; i < m; i++)
+    for (long i = 0; i < m; i++) {
       rowNorms(i) = A.row(i).squaredNorm();
+    }
 
-    for (long j = 0; j < n; j++)
+    for (long j = 0; j < n; j++) {
       columnNorms(j) = AColMajor.col(j).squaredNorm();
+    }
 
     sample::AliasSampler rowSampler(rowNorms);
     sample::AliasSampler colSampler(columnNorms);
@@ -93,7 +94,7 @@ class Solver {
       val = (b(i_k) - z(i_k) - val) / rowNorms(i_k);
 
       // TODO: .toDense() seems to be required here!
-      // FIXME: replace .toDense() with iteration over spark i_k row
+      // FIXME: replace .toDense() with iteration over sparse i_k row
       x += val * A.row(i_k).toDense();
     }
 
@@ -122,11 +123,13 @@ class Solver {
 
     x.setZero();
 
-    for (long i = 0; i < m; i++)
+    for (long i = 0; i < m; i++) {
       rowNorms(i) = ARowMajor.row(i).squaredNorm();
+    }
 
-    for (long j = 0; j < n; j++)
+    for (long j = 0; j < n; j++) {
       columnNorms(j) = AColMajor.col(j).squaredNorm();
+    }
 
     for (long k = 0; k < maxIterations; k++) {
 

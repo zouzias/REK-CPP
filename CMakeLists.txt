@@ -17,8 +17,8 @@ FIND_PACKAGE (Eigen3 3.3 REQUIRED NO_MODULE)
 include_directories(src)
 
 set(SOURCE_FILES
-        src/algorithms/Solver.hpp
-        src/samplers/AliasSampler.hpp)
+        src/solver.hpp
+        src/sampler.hpp)
 
 add_executable(rek_cpp ${SOURCE_FILES} src/main.cpp)
 target_link_libraries (rek_cpp Eigen3::Eigen)

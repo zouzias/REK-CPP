@@ -1,7 +1,7 @@
 #include <iostream>
 #include <random>
 
-#include "algorithms/Solver.hpp"
+#include "solver.hpp"
 
 using namespace rek;
 

@@ -1,4 +1,4 @@
-#include "algorithms/Solver.hpp"
+#include "solver.hpp"
 #include <iostream>
 
 using namespace rek;

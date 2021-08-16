@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "algorithms/Solver.hpp"
+#include "solver.hpp"
 
 using namespace rek;
 

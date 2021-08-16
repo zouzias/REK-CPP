@@ -24,44 +24,46 @@ public:
 
   explicit AliasSampler(const std::vector<double> &probs)
       : A(probs.size() + 2), B(probs.size() + 2), Y(probs.size() + 2) {
-    unsigned int j;
     double sum = 0;
 
     this->N = (unsigned int)probs.size();
-    for (j = 0; j < N; j++)
+    for (size_t j = 0; j < N; j++) {
       sum += probs[j];
+    }
 
     sum = 1 / sum;
 
     // Normalize it now
-    for (j = 0; j < N; j++)
+    for (size_t j = 0; j < N; j++)
       Y[j + 1] = probs[j] * sum;
   };
 
   explicit AliasSampler(const Eigen::RowVectorXd &probs)
       : A(probs.size() + 2), B(probs.size() + 2), Y(probs.size() + 2) {
 
-    unsigned int j;
     double sum = 0;
 
     this->N = (unsigned int)probs.size();
 
-    for (j = 0; j < N; j++)
+    for (size_t j = 0; j < N; j++) {
       sum += probs(j);
+    }
 
     sum = 1 / sum;
 
     // Normalize it now
-    for (j = 0; j < N; j++)
+    for (size_t j = 0; j < N; j++) {
       Y[j + 1] = probs(j) * sum;
+    }
   };
 
   std::vector<unsigned int> sample(unsigned int numSamples) {
     std::vector<unsigned int> samples(numSamples);
 
     // Sample from Alias Sampler
-    for (unsigned int k = 0; k < numSamples; k++)
+    for (unsigned int k = 0; k < numSamples; k++) {
       samples[k] = walkerSample();
+    }
 
     return samples;
   };
