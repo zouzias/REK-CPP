@@ -23,14 +23,14 @@ class Solver {
                     const RowVector &x, const RowVector &b, const RowVector &z,
                     double tolerance) const {
 
-    RowVector residual = A * x - b + z;
-    bool condOne = residual.norm() < tolerance;
+    const RowVector residual = A * x - b + z;
+    const bool condOne = residual.norm() < tolerance;
 
     // Early return
     if (!condOne)
       return false;
 
-    RowVector zA = (z.transpose() * AColMajor);
+    const RowVector zA = z.transpose() * AColMajor;
     return zA.norm() < tolerance;
   }
 
@@ -40,22 +40,21 @@ class Solver {
                          const RowVector &x, const RowVector &b,
                          const RowVector &z, double tolerance) const {
 
-    RowVector residual = A * x - b + z;
-    bool condOne = residual.norm() < tolerance;
+    const RowVector residual = A * x - b + z;
+    const bool condOne = residual.norm() < tolerance;
 
     // Early return
     if (!condOne)
       return false;
 
-    RowVector zA = (z.transpose() * AColMajor);
+    const RowVector zA = z.transpose() * AColMajor;
     return zA.norm() < tolerance;
   }
 
   RowVector solve(SparseMatrix<double, RowMajor> &A,
                   SparseMatrix<double, ColMajor> &AColMajor, const RowVector &b,
                   long MaxIterations, double tolerance = tolerance_) const {
-    double val;
-    long m = A.rows(), n = AColMajor.cols(), i_k, j_k;
+    const long m = A.rows(), n = AColMajor.cols();
     RowVector x(A.cols());
     RowVector z(b);
     RowVector rowNorms(A.rows());
@@ -85,10 +84,10 @@ class Solver {
           hasConverged(A, AColMajor, x, b, z, tolerance))
         break;
 
-      i_k = rowSampler.walkerSample();
-      j_k = colSampler.walkerSample();
+      const long i_k = rowSampler.walkerSample();
+      const long j_k = colSampler.walkerSample();
 
-      val = -AColMajor.col(j_k).dot(z) / columnNorms(j_k);
+      double val = -AColMajor.col(j_k).dot(z) / columnNorms(j_k);
       z += val * AColMajor.col(j_k);
       val = A.row(i_k).dot(x);
       val = (b(i_k) - z(i_k) - val) / rowNorms(i_k);
@@ -114,8 +113,7 @@ class Solver {
                   Matrix<double, Dynamic, Dynamic, RowMajor> &ARowMajor,
                   const RowVector &b, long maxIterations,
                   double tolerance = tolerance_) const {
-    double val;
-    long m = ARowMajor.rows(), n = AColMajor.cols(), i_k, j_k;
+    const long m = ARowMajor.rows(), n = AColMajor.cols();
     RowVector x(AColMajor.cols());
     RowVector z(b);
     RowVector rowNorms(AColMajor.rows());
@@ -135,17 +133,16 @@ class Solver {
 
       // Check for convergence every blockSize_ iterations
       if ((k + 1) % blockSize_ == 0 &&
-          hasConvergedDense(ARowMajor, AColMajor, x, b, z, tolerance))
+          hasConvergedDense(ARowMajor, AColMajor, x, b, z, tolerance)) {
         break;
+      }
 
       // Extended Kaczmarz
-      i_k = k % m;
-      j_k = k % n;
+      const long i_k = k % m;
+      const long j_k = k % n;
 
-      val = -z.dot(AColMajor.col(j_k)) / columnNorms(j_k);
-
+      double val = -z.dot(AColMajor.col(j_k)) / columnNorms(j_k);
       z += val * AColMajor.col(j_k);
-
       val = x.dot(ARowMajor.row(i_k));
       val = (b(i_k) - z(i_k) - val) / rowNorms(i_k);
 
