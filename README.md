@@ -21,15 +21,15 @@ The above code runs a simple instance of least-squares for a gaussian random mat
 ## Usage
 
 ```c++
-
 using namespace Eigen;
 
 unsigned int m= 100, n = 10;
-
 Matrix<double, Dynamic, Dynamic> A(m, n);
 RowVector xopt(n);
+
 xopt.setRandom();
 A.setRandom();
+
 RowVector b = A * xopt;
 
 auto solver = rek::Solver();
@@ -46,9 +46,6 @@ for (unsigned int j = 0 ; j < A.cols(); j++){
 RowVector residual = x - xopt;
 std::cout << "Least Squares error: " << residual.norm() << std::endl;
 ```
-
-## Bugs
-Please report bugs by opening a new [issue](https://github.com/zouzias/REK-CPP/issues/new).
 
 ### Implementation Details
 REK-CPP is an implementation of REK with two additional technical features. First, REK-CPP utilizes level-1 BLAS routines for 
