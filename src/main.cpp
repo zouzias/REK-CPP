@@ -5,9 +5,8 @@
 using namespace rek;
 
 int main() {
-
-  unsigned int m = 100, n = 10;
-  long ITERS = 100000;
+  cont unsigned int m = 100, n = 10;
+  const long ITERS = 100000;
 
   Matrix<double, Dynamic, Dynamic> A(m, n);
   RowVector xopt(n);
@@ -24,7 +23,7 @@ int main() {
     std::cout << x(j) << " , " << xopt(j) << std::endl;
   }
 
-  RowVector residual = x - xopt;
+  const RowVector residual = x - xopt;
   std::cout << "Least Squares error: " << residual.norm() << std::endl;
 
   return 0;

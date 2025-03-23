@@ -6,7 +6,6 @@
 using namespace std;
 
 int main() {
-
   unsigned int n = 100, numSamples = 500;
   double std = 10.0;
   vector<double> prob(n);

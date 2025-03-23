@@ -1,10 +1,10 @@
-#include "solver.hpp"
 #include <iostream>
+
+#include "solver.hpp"
 
 using namespace rek;
 
 int main() {
-
   srand((unsigned int)time(nullptr));
   unsigned int m = 100, n = 10;
   long ITERS = 10000;

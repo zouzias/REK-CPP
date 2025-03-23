@@ -12,7 +12,6 @@ using namespace Eigen;
 using RowVector = Eigen::Matrix<double, Eigen::Dynamic, 1>;
 
 class Solver {
-
   /** Periodically check for convergence */
   int blockSize_ = 1000;
 
@@ -22,13 +21,11 @@ class Solver {
                     SparseMatrix<double, ColMajor> &AColMajor,
                     const RowVector &x, const RowVector &b, const RowVector &z,
                     double tolerance) const {
-
     const RowVector residual = A * x - b + z;
     const bool condOne = residual.norm() < tolerance;
 
     // Early return
-    if (!condOne)
-      return false;
+    if (!condOne) return false;
 
     const RowVector zA = z.transpose() * AColMajor;
     return zA.norm() < tolerance;
@@ -39,13 +36,11 @@ class Solver {
                          Matrix<double, Dynamic, Dynamic, ColMajor> &AColMajor,
                          const RowVector &x, const RowVector &b,
                          const RowVector &z, double tolerance) const {
-
     const RowVector residual = A * x - b + z;
     const bool condOne = residual.norm() < tolerance;
 
     // Early return
-    if (!condOne)
-      return false;
+    if (!condOne) return false;
 
     const RowVector zA = z.transpose() * AColMajor;
     return zA.norm() < tolerance;
@@ -78,7 +73,6 @@ class Solver {
     colSampler.initSampler();
 
     for (long k = 0; k < MaxIterations; k++) {
-
       // Check for convergence every blockSize_ iterations
       if ((k + 1) % blockSize_ == 0 &&
           hasConverged(A, AColMajor, x, b, z, tolerance))
@@ -130,7 +124,6 @@ class Solver {
     }
 
     for (long k = 0; k < maxIterations; k++) {
-
       // Check for convergence every blockSize_ iterations
       if ((k + 1) % blockSize_ == 0 &&
           hasConvergedDense(ARowMajor, AColMajor, x, b, z, tolerance)) {
@@ -151,7 +144,7 @@ class Solver {
     return x;
   }
 
-public:
+ public:
   Solver() = default;
 
   RowVector solve(Matrix<double, Dynamic, Dynamic, ColMajor> &AColMajor,
@@ -196,7 +189,6 @@ public:
    */
   RowVector solve(SparseMatrix<double, ColMajor> &AColMajor, const RowVector &b,
                   long maxIterations, double tolerance = tolerance_) const {
-
     SparseMatrix<double, RowMajor> A(AColMajor.rows(), AColMajor.cols());
 
     // Copy column major to row major sparse matrix
@@ -210,4 +202,4 @@ public:
   };
 };
 
-} // namespace rek
+}  // namespace rek

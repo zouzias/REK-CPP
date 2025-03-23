@@ -10,12 +10,11 @@ namespace rek {
 namespace sample {
 
 class AliasSampler {
-
   unsigned int N;
   std::vector<unsigned int> A, B;
   std::vector<double> Y;
 
-public:
+ public:
   AliasSampler(const AliasSampler &) = delete;
 
   AliasSampler(const AliasSampler &&) = delete;
@@ -34,13 +33,11 @@ public:
     sum = 1 / sum;
 
     // Normalize it now
-    for (size_t j = 0; j < N; j++)
-      Y[j + 1] = probs[j] * sum;
+    for (size_t j = 0; j < N; j++) Y[j + 1] = probs[j] * sum;
   };
 
   explicit AliasSampler(const Eigen::RowVectorXd &probs)
       : A(probs.size() + 2), B(probs.size() + 2), Y(probs.size() + 2) {
-
     double sum = 0;
 
     this->N = (unsigned int)probs.size();
@@ -90,8 +87,7 @@ public:
       do {
         j--;
       } while (Y[B[j]] >= 1.0); /* find j so X[B[j]] wants less */
-      if (i >= j)
-        break;
+      if (i >= j) break;
       k = B[i];
       B[i] = B[j];
       B[j] = k; /* swap B[i], B[j] */
@@ -100,12 +96,10 @@ public:
     i = j;
     j++;
     while (i > 0) {
-      while (Y[B[j]] <= 1.0)
-        j++;
+      while (Y[B[j]] <= 1.0) j++;
       /* find j so X[B[j]] needs more */
       assert(Y[B[i]] < 1.0); /* meanwhile X[B[i]] wants less */
-      if (j > N)
-        break;
+      if (j > N) break;
       assert(j <= N);
       assert(Y[B[j]] > 1.0);
       Y[B[j]] -= 1.0 - Y[B[i]]; /* B[i] will donate to B[j] to fix up */
@@ -127,11 +121,10 @@ public:
     /* Let i = random uniform integer from {1,2,...N};  */
     i = 1 + (unsigned int)((N - 1) * drand48());
     r = drand48();
-    if (r > Y[i])
-      i = A[i];
+    if (r > Y[i]) i = A[i];
 
     return i - 1;
   }
 };
-} // namespace sample
-} // namespace rek
+}  // namespace sample
+}  // namespace rek
