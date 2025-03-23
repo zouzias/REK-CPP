@@ -5,7 +5,7 @@
 using namespace rek;
 
 int main() {
-  cont unsigned int m = 100, n = 10;
+  const unsigned int m = 100, n = 10;
   const long ITERS = 100000;
 
   Matrix<double, Dynamic, Dynamic> A(m, n);
