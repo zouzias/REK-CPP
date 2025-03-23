@@ -31,15 +31,15 @@ int main() {
   long ITERS = 10000;
 
   SparseMatrix<double, RowMajor> A = randomSparseMatrix(m, n, 0.5);
-  RowVector xopt(n);
+  rek::RowVector xopt(n);
   xopt.setRandom();
-  RowVector b = A * xopt;
+  rek::RowVector b = A * xopt;
 
   auto solver = rek::Solver();
-  RowVector x = solver.solve(A, b, ITERS);
+  rek::RowVector x = solver.solve(A, b, ITERS);
 
   // Error must be smaller than 0.5
-  RowVector residual = (x - xopt) / std::sqrt(n);
+  rek::RowVector residual = (x - xopt) / std::sqrt(n);
   std::cout << "Least squares error is " << residual.norm() << std::endl;
   assert(residual.norm() <= 0.5);
   std::cout << "Success..." << std::endl;
