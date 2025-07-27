@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.10)
 project(rek_cpp)
 
 # enable c++ language
@@ -36,6 +36,16 @@ target_link_libraries (test_sparse_colmajor Eigen3::Eigen)
 
 # activate ctest
 include(CTest)
+# ------------------------------------------------------------------------------
+# Valgrind
+# ------------------------------------------------------------------------------
+include (CTest)
+set(MemoryCheckCommand /usr/bin/valgrind)
+set(MEMORYCHECK_COMMAND_OPTIONS "${MEMORYCHECK_COMMAND_OPTIONS} --leak-check=full")
+set(MEMORYCHECK_COMMAND_OPTIONS "${MEMORYCHECK_COMMAND_OPTIONS} --track-fds=yes")
+set(MEMORYCHECK_COMMAND_OPTIONS "${MEMORYCHECK_COMMAND_OPTIONS} --trace-children=yes")
+set(MEMORYCHECK_COMMAND_OPTIONS "${MEMORYCHECK_COMMAND_OPTIONS} --track-origins=yes")
+set(MEMORYCHECK_COMMAND_OPTIONS "${MEMORYCHECK_COMMAND_OPTIONS} --error-exitcode=1")
 enable_testing()
 
 add_test(test_sparse ${PROJECT_BINARY_DIR}/bin/test_sparse)

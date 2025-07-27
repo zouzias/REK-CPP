@@ -1,0 +1,18 @@
+name: C++ CI
+
+on: [push]
+
+jobs:
+  
+  valgrind-ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+      - name: Install ubuntu deps
+        run: sudo apt-get install -q gcc g++ cmake libeigen3-dev python-dev-is-python3 valgrind
+      - name: build
+        run: ./build.sh
+      - name: valgrind - memory leaks
+        run: ./dev-scripts/run-valgrind.sh
