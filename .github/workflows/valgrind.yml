@@ -15,4 +15,4 @@ jobs:
       - name: build
         run: ./build.sh
       - name: valgrind - memory leaks
-        run: ./dev-scripts/runValgrind.sh
+        run: ./dev-scripts/run-valgrind.sh
