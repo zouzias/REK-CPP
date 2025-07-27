@@ -11,7 +11,7 @@ jobs:
         with:
           submodules: 'true'
       - name: Install ubuntu deps
-        run: sudo apt-get install -q gcc g++ cmake libeigen3-dev git wget python-dev-is-python3 valgrind
+        run: sudo apt-get install -q gcc g++ cmake libeigen3-dev python-dev-is-python3 valgrind
       - name: build
         run: ./build.sh
       - name: valgrind - memory leaks
