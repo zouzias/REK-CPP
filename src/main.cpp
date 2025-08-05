@@ -2,6 +2,7 @@
 
 #include "solver.hpp"
 
+using namespace Eigen;
 using namespace rek;
 
 int main() {

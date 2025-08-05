@@ -3,6 +3,7 @@
 
 #include "solver.hpp"
 
+using namespace Eigen;
 using namespace rek;
 
 SparseMatrix<double, RowMajor> randomSparseMatrix(int m, int n,
