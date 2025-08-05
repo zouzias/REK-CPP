@@ -27,8 +27,8 @@ SparseMatrix<double, ColMajor> randomSparseMatrix(int m, int n,
 
 int main() {
   srand((unsigned int)time(nullptr));
-  unsigned int m = 100, n = 10;
-  long ITERS = 10000;
+  constexpr unsigned int m = 100, n = 10;
+  constexpr long ITERS = 10000;
 
   SparseMatrix<double, ColMajor> A = randomSparseMatrix(m, n, 0.5);
   rek::RowVector xopt(n);
@@ -39,7 +39,7 @@ int main() {
   rek::RowVector x = solver.solve(A, b, ITERS);
 
   // Error must be smaller than 0.5
-  rek::RowVector residual = (x - xopt) / std::sqrt(n);
+  const rek::RowVector residual = (x - xopt) / std::sqrt(n);
   std::cout << "Least squares error is " << residual.norm() << std::endl;
   assert(residual.norm() <= 0.5);
   std::cout << "Success..." << std::endl;
