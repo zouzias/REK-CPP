@@ -28,7 +28,8 @@ SparseMatrix<double, ColMajor> randomSparseMatrix(int m, int n,
 
 int main() {
   srand((unsigned int)time(nullptr));
-  constexpr unsigned int m = 100, n = 10;
+  constexpr unsigned int m = 100;
+  constexpr unsigned int n = 10;
   constexpr long ITERS = 10000;
 
   SparseMatrix<double, ColMajor> A = randomSparseMatrix(m, n, 0.5);

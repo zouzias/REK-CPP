@@ -67,8 +67,8 @@ class Solver {
       columnNorms(j) = AColMajor.col(j).squaredNorm();
     }
 
-    sample::AliasSampler rowSampler(rowNorms);
-    sample::AliasSampler colSampler(columnNorms);
+    sampler::AliasSampler rowSampler(rowNorms);
+    sampler::AliasSampler colSampler(columnNorms);
 
     // Initialize Alias samplers, O(n)
     rowSampler.initSampler();
