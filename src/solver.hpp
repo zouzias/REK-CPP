@@ -8,17 +8,16 @@
 
 namespace rek {
 
-using namespace Eigen;
 using RowVector = Eigen::Matrix<double, Eigen::Dynamic, 1>;
 
 class Solver {
   /** Periodically check for convergence */
-  int blockSize_ = 1000;
+  constexpr static int blockSize_ = 1000;
 
   constexpr static double tolerance_ = 10e-5;
 
-  bool hasConverged(SparseMatrix<double, RowMajor> &A,
-                    SparseMatrix<double, ColMajor> &AColMajor,
+  bool hasConverged(Eigen::SparseMatrix<double, Eigen::RowMajor> &A,
+                    Eigen::SparseMatrix<double, Eigen::ColMajor> &AColMajor,
                     const RowVector &x, const RowVector &b, const RowVector &z,
                     double tolerance) const {
     const RowVector residual = A * x - b + z;
@@ -32,10 +31,12 @@ class Solver {
   }
 
   // FIXME: Is this necessary? Duplicate with hasConverged()
-  bool hasConvergedDense(Matrix<double, Dynamic, Dynamic, RowMajor> &A,
-                         Matrix<double, Dynamic, Dynamic, ColMajor> &AColMajor,
-                         const RowVector &x, const RowVector &b,
-                         const RowVector &z, double tolerance) const {
+  bool hasConvergedDense(
+      Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> &A,
+      Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor>
+          &AColMajor,
+      const RowVector &x, const RowVector &b, const RowVector &z,
+      double tolerance) const {
     const RowVector residual = A * x - b + z;
     const bool condOne = residual.norm() < tolerance;
 
@@ -46,9 +47,10 @@ class Solver {
     return zA.norm() < tolerance;
   }
 
-  RowVector solve(SparseMatrix<double, RowMajor> &A,
-                  SparseMatrix<double, ColMajor> &AColMajor, const RowVector &b,
-                  long MaxIterations, double tolerance = tolerance_) const {
+  RowVector solve(Eigen::SparseMatrix<double, Eigen::RowMajor> &A,
+                  Eigen::SparseMatrix<double, Eigen::ColMajor> &AColMajor,
+                  const RowVector &b, long MaxIterations,
+                  double tolerance = tolerance_) const {
     const long m = A.rows(), n = AColMajor.cols();
     RowVector x(A.cols());
     RowVector z(b);
@@ -65,8 +67,8 @@ class Solver {
       columnNorms(j) = AColMajor.col(j).squaredNorm();
     }
 
-    sample::AliasSampler rowSampler(rowNorms);
-    sample::AliasSampler colSampler(columnNorms);
+    sampler::AliasSampler rowSampler(rowNorms);
+    sampler::AliasSampler colSampler(columnNorms);
 
     // Initialize Alias samplers, O(n)
     rowSampler.initSampler();
@@ -103,8 +105,10 @@ class Solver {
    * @param tolerance Accuracy tolerance, default tolerance_
    * @return Returns an approximate solution to ||Ax - b||_2
    */
-  RowVector solve(Matrix<double, Dynamic, Dynamic, ColMajor> &AColMajor,
-                  Matrix<double, Dynamic, Dynamic, RowMajor> &ARowMajor,
+  RowVector solve(Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic,
+                                Eigen::ColMajor> &AColMajor,
+                  Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic,
+                                Eigen::RowMajor> &ARowMajor,
                   const RowVector &b, long maxIterations,
                   double tolerance = tolerance_) const {
     const long m = ARowMajor.rows(), n = AColMajor.cols();
@@ -147,10 +151,12 @@ class Solver {
  public:
   Solver() = default;
 
-  RowVector solve(Matrix<double, Dynamic, Dynamic, ColMajor> &AColMajor,
+  RowVector solve(Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic,
+                                Eigen::ColMajor> &AColMajor,
                   const RowVector &b, long MaxIterations) const {
     // Duplicate input matrix to row major storage
-    Matrix<double, Dynamic, Dynamic, RowMajor> ARowMajor(AColMajor);
+    Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
+        ARowMajor(AColMajor);
     return solve(AColMajor, ARowMajor, b, MaxIterations);
   }
 
@@ -163,15 +169,16 @@ class Solver {
    * @param tolerance Accuracy tolerance, default tolerance_
    * @return Returns an approximate solution to ||Ax - b||_2
    */
-  RowVector solve(SparseMatrix<double, RowMajor> &A,
-                  const Matrix<double, Dynamic, 1> &b, long maxIterations,
-                  double tolerance = tolerance_) const {
-    SparseMatrix<double, ColMajor> AColMajor(A.rows(), A.cols());
+  RowVector solve(Eigen::SparseMatrix<double, Eigen::RowMajor> &A,
+                  const Eigen::Matrix<double, Eigen::Dynamic, 1> &b,
+                  long maxIterations, double tolerance = tolerance_) const {
+    Eigen::SparseMatrix<double, Eigen::ColMajor> AColMajor(A.rows(), A.cols());
 
     // Copy row major to column major sparse matrix
     AColMajor.reserve(A.nonZeros());
     for (long k = 0; k < A.outerSize(); ++k)
-      for (SparseMatrix<double, RowMajor>::InnerIterator it(A, k); it; ++it) {
+      for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator it(A, k);
+           it; ++it) {
         AColMajor.insert(it.row(), it.col()) = it.value();
       }
 
@@ -187,15 +194,18 @@ class Solver {
    * @param tolerance Accuracy tolerance, default tolerance_
    * @return Returns an approximate solution to ||Ax - b||_2
    */
-  RowVector solve(SparseMatrix<double, ColMajor> &AColMajor, const RowVector &b,
-                  long maxIterations, double tolerance = tolerance_) const {
-    SparseMatrix<double, RowMajor> A(AColMajor.rows(), AColMajor.cols());
+  RowVector solve(Eigen::SparseMatrix<double, Eigen::ColMajor> &AColMajor,
+                  const RowVector &b, long maxIterations,
+                  double tolerance = tolerance_) const {
+    Eigen::SparseMatrix<double, Eigen::RowMajor> A(AColMajor.rows(),
+                                                   AColMajor.cols());
 
     // Copy column major to row major sparse matrix
     A.reserve(AColMajor.nonZeros());
     for (long k = 0; k < AColMajor.outerSize(); ++k)
-      for (SparseMatrix<double, ColMajor>::InnerIterator it(AColMajor, k); it;
-           ++it)
+      for (Eigen::SparseMatrix<double, Eigen::ColMajor>::InnerIterator it(
+               AColMajor, k);
+           it; ++it)
         A.insert(it.row(), it.col()) = it.value();
 
     return solve(A, AColMajor, b, maxIterations, tolerance);

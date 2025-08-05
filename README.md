@@ -12,11 +12,13 @@ Authors: [Anastasios Zouzias](https://github.com/zouzias) and Nikolaos Freris
 Clone the project. Type
 
 ```bash
-./build.sh
+make build
 ./build/bin/test_{dense|sparse|sparse_colmajor}
 ```
 
 The above code runs a simple instance of least-squares for a gaussian random matrix A and gaussian vector b.
+
+To run a few utests, type `make test`.
 
 ## Usage
 
