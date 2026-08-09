@@ -18,9 +18,9 @@ Authors: [Anastasios Zouzias](https://github.com/zouzias) and Nikolaos Freris
 
 ### Requirements
 
-- A C++11-compatible compiler (e.g., GCC or Clang)
-- [CMake](https://cmake.org/) >= 3.10
-- [Eigen](https://eigen.tuxfamily.org/) >= 3.3 (`libeigen3-dev` on Ubuntu/Debian)
+- A C++14-compatible compiler (e.g., GCC or Clang)
+- [CMake](https://cmake.org/) >= 3.19
+- [Eigen](https://eigen.tuxfamily.org/) >= 3.3, < 6.0 (`libeigen3-dev` on Ubuntu/Debian)
 
 ### Build
 

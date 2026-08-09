@@ -2,7 +2,7 @@
 
 #include <Eigen/Dense>
 #include <cassert>
-#include <cstdlib>
+#include <random>
 #include <vector>
 
 namespace rek {
@@ -13,16 +13,22 @@ class AliasSampler {
   unsigned int N;
   std::vector<unsigned int> A, B;
   std::vector<double> Y;
+  std::mt19937 rng_;
+  std::uniform_real_distribution<double> unif_{0.0, 1.0};
 
  public:
   AliasSampler(const AliasSampler &) = delete;
 
-  AliasSampler(const AliasSampler &&) = delete;
+  AliasSampler(AliasSampler &&) = delete;
 
   ~AliasSampler() = default;
 
-  explicit AliasSampler(const std::vector<double> &probs)
-      : A(probs.size() + 2), B(probs.size() + 2), Y(probs.size() + 2) {
+  explicit AliasSampler(const std::vector<double> &probs,
+                        unsigned int seed = std::random_device{}())
+      : A(probs.size() + 2),
+        B(probs.size() + 2),
+        Y(probs.size() + 2),
+        rng_(seed) {
     double sum = 0;
 
     this->N = (unsigned int)probs.size();
@@ -36,8 +42,12 @@ class AliasSampler {
     for (size_t j = 0; j < N; j++) Y[j + 1] = probs[j] * sum;
   };
 
-  explicit AliasSampler(const Eigen::RowVectorXd &probs)
-      : A(probs.size() + 2), B(probs.size() + 2), Y(probs.size() + 2) {
+  explicit AliasSampler(const Eigen::RowVectorXd &probs,
+                        unsigned int seed = std::random_device{}())
+      : A(probs.size() + 2),
+        B(probs.size() + 2),
+        Y(probs.size() + 2),
+        rng_(seed) {
     double sum = 0;
 
     this->N = (unsigned int)probs.size();
@@ -119,8 +129,8 @@ class AliasSampler {
     unsigned int i;
     double r;
     /* Let i = random uniform integer from {1,2,...N};  */
-    i = 1 + (unsigned int)((N - 1) * drand48());
-    r = drand48();
+    i = 1 + (unsigned int)((N - 1) * unif_(rng_));
+    r = unif_(rng_);
     if (r > Y[i]) i = A[i];
 
     return i - 1;
