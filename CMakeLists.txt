@@ -15,7 +15,7 @@ set(EXECUTABLE_OUTPUT_PATH "bin")
 
 add_compile_options(-Wall -Wextra)
 
-FIND_PACKAGE (Eigen3 3.3...<6.0 REQUIRED NO_MODULE)
+FIND_PACKAGE (Eigen3 REQUIRED NO_MODULE)
 
 include_directories(src)
 
