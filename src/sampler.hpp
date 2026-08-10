@@ -126,10 +126,11 @@ class AliasSampler {
   };
 
   unsigned int walkerSample() {
+    std::uniform_int_distribution<unsigned int> pick_index(1, N);
     unsigned int i;
     double r;
     /* Let i = random uniform integer from {1,2,...N};  */
-    i = 1 + (unsigned int)((N - 1) * unif_(rng_));
+    i = pick_index(rng_);
     r = unif_(rng_);
     if (r > Y[i]) i = A[i];
 
