@@ -22,7 +22,6 @@ int main() {
   cout << "Checking if random samples are in range [0, " << n - 1 << "]"
        << endl;
   for (unsigned int sample : samples) {
-    assert(sample >= 0);
     assert(sample < n);
   }
   cout << "Success..." << endl;
